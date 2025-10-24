@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Enable standalone output for Docker
+  output: 'standalone',
   // Helps Next.js find the correct project root in monorepos with multiple lockfiles
   outputFileTracingRoot: __dirname,
   // Disable experimental features that might cause webpack issues

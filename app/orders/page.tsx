@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { Button } from '@/components/ui/button'
 import { apiService } from '@/lib/api'
 import { toast } from 'sonner'
@@ -26,7 +26,7 @@ interface Order {
     }>;
 }
 
-export default function OrdersPage() {
+function OrdersContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const [orders, setOrders] = useState<Order[]>([]);
@@ -268,8 +268,8 @@ export default function OrdersPage() {
                                     key={order.id}
                                     id={`order-${order.id}`}
                                     className={`hover:bg-gray-50 transition-colors ${highlightedOrderId === order.id
-                                            ? 'bg-green-50 border-l-4 border-green-500 shadow-md'
-                                            : ''
+                                        ? 'bg-green-50 border-l-4 border-green-500 shadow-md'
+                                        : ''
                                         }`}
                                 >
                                     <td className="whitespace-nowrap py-4 pl-6 pr-3 text-sm font-medium text-gray-900">
@@ -341,6 +341,18 @@ export default function OrdersPage() {
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function OrdersPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center h-64">
+                <div className="text-lg">Loading orders...</div>
+            </div>
+        }>
+            <OrdersContent />
+        </Suspense>
     )
 }
 
