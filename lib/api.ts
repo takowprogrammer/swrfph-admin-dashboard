@@ -90,7 +90,8 @@ class ApiService {
         if (!refreshToken) return false;
 
         try {
-            const response = await fetch(`${this.baseURL}/auth/refresh`, {
+            const cleanBaseURL = this.baseURL.endsWith('/') ? this.baseURL.slice(0, -1) : this.baseURL;
+            const response = await fetch(`${cleanBaseURL}/auth/refresh`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ refreshToken }),
