@@ -11,26 +11,22 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const { user, loading, isAuthenticated } = useAuth()
-  const router = useRouter()
-  const pathname = usePathname()
+    const { user, loading, isAuthenticated } = useAuth()
+    const router = useRouter()
+    const pathname = usePathname()
 
   // Don't show sidebar/header on login page
-  const isLoginPage = pathname === '/admin-login'
+  const isLoginPage = pathname === '/admin-login' || pathname === '/login'
 
   // Debug logging
   console.log('DashboardLayout - loading:', loading, 'isAuthenticated:', isAuthenticated, 'isLoginPage:', isLoginPage, 'user:', user)
 
   useEffect(() => {
-    // Add a small delay to allow auth state to update
-    const timer = setTimeout(() => {
-      if (!loading && !isAuthenticated && !isLoginPage) {
-        console.log('DashboardLayout - Redirecting to login page')
-        router.push('/admin-login')
-      }
-    }, 100)
-
-    return () => clearTimeout(timer)
+    // If not authenticated and not on login page, redirect immediately
+    if (!loading && !isAuthenticated && !isLoginPage) {
+      console.log('DashboardLayout - Redirecting to login page')
+      router.push('/login')
+    }
   }, [loading, isAuthenticated, isLoginPage, router])
 
     if (loading) {
