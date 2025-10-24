@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { Button } from '@/components/ui/button'
 import { Bell, Clock, Package, ShoppingCart, Activity, Users, TrendingUp, AlertTriangle } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext'
 import { apiService } from '@/lib/api'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
@@ -83,7 +82,6 @@ interface AdminStats {
 const COLORS = ['#10B981', '#F59E0B', '#3B82F6', '#EF4444'];
 
 export default function AdminDashboard() {
-  const { user } = useAuth()
   const router = useRouter()
   const [stats, setStats] = useState<AdminStats | null>(null)
   const [loading, setLoading] = useState(true)
