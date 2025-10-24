@@ -7,7 +7,7 @@ import Sidebar from './Sidebar'
 import Header from './Header'
 
 interface DashboardLayoutProps {
-  children: React.ReactNode
+    children: React.ReactNode
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
@@ -18,50 +18,59 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   // Don't show sidebar/header on login page
   const isLoginPage = pathname === '/admin-login'
 
+  // Debug logging
+  console.log('DashboardLayout - loading:', loading, 'isAuthenticated:', isAuthenticated, 'isLoginPage:', isLoginPage, 'user:', user)
+
   useEffect(() => {
-    if (!loading && !isAuthenticated && !isLoginPage) {
-      router.push('/admin-login')
-    }
+    // Add a small delay to allow auth state to update
+    const timer = setTimeout(() => {
+      if (!loading && !isAuthenticated && !isLoginPage) {
+        console.log('DashboardLayout - Redirecting to login page')
+        router.push('/admin-login')
+      }
+    }, 100)
+
+    return () => clearTimeout(timer)
   }, [loading, isAuthenticated, isLoginPage, router])
 
-  if (loading) {
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen bg-gray-100">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+                    <p className="mt-4 text-lg text-gray-600">Loading...</p>
+                </div>
+            </div>
+        )
+    }
+
+    // If not authenticated and not on login page, show loading (will redirect)
+    if (!isAuthenticated && !isLoginPage) {
+        return (
+            <div className="flex items-center justify-center h-screen bg-gray-100">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+                    <p className="mt-4 text-lg text-gray-600">Redirecting to login...</p>
+                </div>
+            </div>
+        )
+    }
+
+    // If on login page, just show children (login form)
+    if (isLoginPage) {
+        return <>{children}</>
+    }
+
+    // If authenticated, show full dashboard layout
     return (
-      <div className="flex items-center justify-center h-screen bg-gray-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-lg text-gray-600">Loading...</p>
+        <div className="flex h-screen bg-gray-100">
+            <Sidebar />
+            <div className="flex-1 flex flex-col overflow-hidden md:ml-64">
+                <Header />
+                <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 p-6">
+                    {children}
+                </main>
+            </div>
         </div>
-      </div>
     )
-  }
-
-  // If not authenticated and not on login page, show loading (will redirect)
-  if (!isAuthenticated && !isLoginPage) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-lg text-gray-600">Redirecting to login...</p>
-        </div>
-      </div>
-    )
-  }
-
-  // If on login page, just show children (login form)
-  if (isLoginPage) {
-    return <>{children}</>
-  }
-
-  // If authenticated, show full dashboard layout
-  return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden md:ml-64">
-        <Header />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 p-6">
-          {children}
-        </main>
-      </div>
-    </div>
-  )
 }

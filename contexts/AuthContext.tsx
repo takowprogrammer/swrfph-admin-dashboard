@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             console.log('AuthContext - Starting login for:', email)
             const response = await apiService.login({ email, password });
             console.log('AuthContext - Login response received')
-
+            
             if (typeof window !== 'undefined') {
                 localStorage.setItem('access_token', response.access_token);
                 localStorage.setItem('refresh_token', response.refresh_token);
@@ -61,12 +61,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
             const userData = await apiService.getProfile();
             console.log('AuthContext - User data received:', userData)
+            
+            // Update state synchronously
             setUser(userData);
-
+            
             if (typeof window !== 'undefined') {
                 localStorage.setItem('user_role', userData.role);
                 console.log('AuthContext - User role stored:', userData.role)
             }
+
+            // Force a small delay to ensure state is updated
+            await new Promise(resolve => setTimeout(resolve, 50))
+            console.log('AuthContext - Login completed, user set:', userData)
         } catch (error) {
             console.error('AuthContext - Login error:', error)
             throw new Error('Login failed. Please check your credentials.');
