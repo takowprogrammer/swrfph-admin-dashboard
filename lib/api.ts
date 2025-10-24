@@ -1,5 +1,12 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
+// Debug logging
+console.log('🔧 API Configuration:', {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    API_BASE_URL: API_BASE_URL,
+    fallbackUsed: !process.env.NEXT_PUBLIC_API_URL
+});
+
 export interface User {
     id: string;
     email: string;
@@ -37,6 +44,15 @@ class ApiService {
         const cleanBaseURL = this.baseURL.endsWith('/') ? this.baseURL.slice(0, -1) : this.baseURL;
         const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
         const requestURL = `${cleanBaseURL}/${cleanEndpoint}`;
+
+        console.log('🌐 API Request:', {
+            baseURL: this.baseURL,
+            cleanBaseURL,
+            endpoint,
+            cleanEndpoint,
+            finalURL: requestURL,
+            method: config.method || 'GET'
+        });
 
         const response = await fetch(requestURL, config);
 
