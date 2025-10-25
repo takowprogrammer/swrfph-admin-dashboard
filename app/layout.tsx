@@ -4,6 +4,16 @@ import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from '@/contexts/AuthContext';
 import DashboardLayout from './components/DashboardLayout';
 
+export const metadata = {
+  title: 'SWRFPH Admin',
+  description: 'SWRFPH Admin Dashboard',
+  icons: {
+    icon: '/swrfph-logo.png',
+    shortcut: '/swrfph-logo.png',
+    apple: '/swrfph-logo.png',
+  },
+};
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({

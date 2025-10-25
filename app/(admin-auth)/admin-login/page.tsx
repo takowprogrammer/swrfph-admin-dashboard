@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'sonner'
+import { SWRFPHLogo } from '@/components/ui/SWRFPHLogo'
 
 export default function AdminLoginPage() {
     const [email, setEmail] = useState('')
@@ -37,6 +38,9 @@ export default function AdminLoginPage() {
         <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
                 <div>
+                    <div className="flex justify-center mb-8">
+                        <SWRFPHLogo size="xl" showText={true} />
+                    </div>
                     <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
                         Admin Dashboard
                     </h2>
