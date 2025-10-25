@@ -73,9 +73,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             // Force a small delay to ensure state is updated
             await new Promise(resolve => setTimeout(resolve, 50))
             console.log('AuthContext - Login completed, user set:', userData)
-        } catch (error) {
-            console.error('AuthContext - Login error:', error)
-            throw new Error('Login failed. Please check your credentials.');
+        } catch (error: any) {
+            console.error('AuthContext - Login error:', {
+                message: error.message,
+                name: error.name,
+                stack: error.stack,
+                fullError: error
+            })
+            // Re-throw the actual error message instead of a generic one
+            throw error;
         }
     };
 

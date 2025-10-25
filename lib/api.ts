@@ -30,7 +30,7 @@ class ApiService {
         endpoint: string,
         options: RequestInit = {}
     ): Promise<T> {
-        const token = localStorage.getItem('access_token');
+        const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
 
         const config: RequestInit = {
             ...options,
@@ -54,7 +54,18 @@ class ApiService {
             method: config.method || 'GET'
         });
 
-        const response = await fetch(requestURL, config);
+        let response;
+        try {
+            response = await fetch(requestURL, config);
+        } catch (fetchError: any) {
+            console.error('❌ Fetch Error:', {
+                error: fetchError.message,
+                type: fetchError.name,
+                requestURL,
+                stack: fetchError.stack
+            });
+            throw new Error(`Network error: ${fetchError.message}. Check if the backend is running and CORS is configured.`);
+        }
 
         if (!response.ok) {
             if (response.status === 401) {
