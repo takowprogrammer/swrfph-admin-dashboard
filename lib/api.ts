@@ -51,7 +51,9 @@ class ApiService {
             endpoint,
             cleanEndpoint,
             finalURL: requestURL,
-            method: config.method || 'GET'
+            method: config.method || 'GET',
+            headers: config.headers,
+            hasBody: !!config.body
         });
 
         let response;
@@ -66,6 +68,13 @@ class ApiService {
             });
             throw new Error(`Network error: ${fetchError.message}. Check if the backend is running and CORS is configured.`);
         }
+
+        console.log('📡 Response received:', {
+            status: response.status,
+            statusText: response.statusText,
+            ok: response.ok,
+            headers: Object.fromEntries(response.headers.entries())
+        });
 
         if (!response.ok) {
             if (response.status === 401) {
